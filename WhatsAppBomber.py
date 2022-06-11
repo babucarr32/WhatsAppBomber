@@ -1,35 +1,25 @@
-#!/usr/bin python3
-
 import WhatsAppBanner
 from WhatsAppBanner import style
 from selenium import webdriver
-import time
-import platform, os
 import config
+import time
 
 print(WhatsAppBanner.banner)
 print(style.GREEN)
 
 
 def main():
-    global browser
     CHROME_PROFILE_PATH = config.CHROME_PROFILE_PATH
 
     options = webdriver.ChromeOptions()
     options.add_argument(CHROME_PROFILE_PATH)
-    platformFinder = platform.system()
-    pwd = os.getcwd()
-    if platformFinder == "Windows":
-        path = pwd + "\chromedriver.exe"
-        browser = webdriver.Chrome(executable_path=os.path.realpath(path), options=options)
-        browser.get('https://web.whatsapp.com/')
-        
-    elif platformFinder == "Linux":
-        path = pwd + "/chromedriver.exe"
-        browser = webdriver.Chrome(executable_path=os.path.realpath(path), options=options)
-        browser.maximize_window()
 
-        browser.get('https://web.whatsapp.com/')
+    browser = webdriver.Chrome(
+        executable_path='../chromedriver.exe', options=options)
+
+    browser.maximize_window()
+
+    browser.get('https://web.whatsapp.com/')
 
     time.sleep(15)
 
@@ -55,6 +45,4 @@ def main():
     else:
         pass
 
-
 main()
-
