@@ -35,7 +35,7 @@ banner = style.RED + """
 ++                                                    By Baboucarr Badjie        ++
 ++                                                                               ++
 ++   DISCLAIMER: This tool is used for educational purse only.                   ++
-++               Am not responsible for any damage caused by this application!   ++
+++               Am not responsible for any damage caused by this tool!          ++
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 """
