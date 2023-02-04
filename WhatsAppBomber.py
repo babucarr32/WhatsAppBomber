@@ -54,6 +54,4 @@ def main():
             pass
     except Exception as e:
         print(e)
-        # if "'chromedriver' executable needs to be in PATH." in e:
-        #     print("Make sure you have the chromedriver that matches with your Chrome browser in this folder. https://chromedriver.chromium.org/home")
 main()
