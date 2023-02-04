@@ -38,7 +38,7 @@ def main():
         confirm = input("Please confirm the target Yes/no: ")
         print(style.BLUE)
         message = input("Enter message to send: ")
-        thread = int(input("Enter thread amount: "))
+        thread = int(input("Enter amount: "))
 
         if confirm == "Yes":
             for i in range(thread):
