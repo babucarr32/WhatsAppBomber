@@ -21,6 +21,7 @@ This is an educational Python tool that automates sending repeated messages to a
 - Python 3.8+
 - Google Chrome
 - [ChromeDriver](https://chromedriver.chromium.org/downloads) (placed in a `/driver/` directory)
+- [ChromeDriver JSON](https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json) (Download from here)
 
 ---
 
@@ -30,7 +31,7 @@ This is an educational Python tool that automates sending repeated messages to a
 your-project/
 ├── WhatsAppBomberBanner.py
 ├── config.py
-├── main.py
+├── WhatsAppBomber.py
 ├── driver/
 │   └── chromedriver / chromedriver.exe
 ```
@@ -98,9 +99,7 @@ This tool is intended for testing and educational purposes only.
 
 Do not use it to harass or spam others.
 
-The author takes no responsibility for misuse of this software.
-
----
+The author takes no responsibility for misuse of this software---
 
 ## 👤 Author
 
