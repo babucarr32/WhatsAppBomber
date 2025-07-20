@@ -1,57 +1,108 @@
+import os
+import time
+import platform
+
+from typing import Any
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+
+import config
 import WhatsAppBomberBanner
 from WhatsAppBomberBanner import style
-from selenium import webdriver
-import config
-import time
-import platform, os
 
-print(WhatsAppBomberBanner.banner)
-print(style.GREEN)
+
+def clear_console():
+    os.system("cls" if platform.system() == "Windows" else "clear")
+
+
+def get_driver_path() -> str:
+    driver_name = "chromedriver.exe" if platform.system() == "Windows" else "chromedriver"
+    return os.path.realpath(os.path.join(os.getcwd(), "driver", driver_name))
+
+
+def launch_browser(driver_path: str, profile_path: str) -> webdriver.Chrome:
+    options = webdriver.ChromeOptions()
+    options.add_argument(profile_path)
+    service = Service(driver_path)
+    browser = webdriver.Chrome(service=service, options=options)
+
+    browser.get("https://web.whatsapp.com/")
+    if platform.system() != "Windows":
+        browser.maximize_window()
+
+    return browser
+
+
+def confirm_target(browser: Any) -> bool:
+    target_xpath = input("Enter target Full XPath: ")
+    try:
+        browser.find_element(By.XPATH, target_xpath).click()
+        time.sleep(2)
+    except Exception:
+        print(style.RED + "❌ Invalid XPath provided.")
+        return False
+
+    print(style.MAGENTA)
+    confirm = input("Please confirm the target (yes/no): ").strip().lower()
+    return confirm in {"yes", "y"}
+
+
+def send_messages(browser: Any):
+    print(style.BLUE)
+    message = input("Enter message to send: ")
+    count = int(input("Enter amount: "))
+
+    for i in range(count):
+        print(style.RED + f"[+] Messages sent: {i + 1}")
+
+        try:
+            input_box = browser.find_element(By.XPATH,
+                '/html/body/div[1]/div/div/div[3]/div/div[4]/div/footer/div[1]/div/span/div/div[2]/div/div[3]/div')
+            send_button = browser.find_element(By.XPATH,
+                '/html/body/div[1]/div/div/div[3]/div/div[4]/div/footer/div[1]/div/span/div/div[2]/div/div[4]')
+        except Exception:
+            print(style.RED + "❌ Unable to locate input or send button.")
+            return
+
+        input_box.send_keys(message)
+        send_button.click()
+        time.sleep(3)
+
+    print(style.GREEN + "✅ Done..." + style.RESET)
+
+
+def interactive_loop(browser: Any):
+    while True:
+        try:
+            if confirm_target(browser):
+                send_messages(browser)
+            else:
+                print(style.RED + "Target not confirmed. Try again.")
+        except Exception as e:
+            print(style.RED + f"Error: {e}" + style.RESET)
+            continue
 
 
 def main():
+    clear_console()
+    print(WhatsAppBomberBanner.banner)
+    print(style.GREEN)
+
     try:
-        CHROME_PROFILE_PATH = config.CHROME_PROFILE_PATH
-
-        options = webdriver.ChromeOptions()
-        options.add_argument(CHROME_PROFILE_PATH)
-        
-        platformFinder = platform.system()
-        pwd = os.getcwd()
-        if platformFinder == "Windows":
-            path = pwd + "\Whatsapp\chromedriver.exe"
-            browser = webdriver.Chrome(executable_path=os.path.realpath(path), options=options)
-            browser.get('https://web.whatsapp.com/')
-
-        elif platformFinder == "Linux":
-            path = pwd + "/Whatsapp/chromedriver"
-            browser = webdriver.Chrome(executable_path=os.path.realpath(path), options=options)
-            browser.maximize_window()
-
-            browser.get('https://web.whatsapp.com/')
+        driver_path = get_driver_path()
+        profile_path = config.CHROME_PROFILE_PATH
+        browser = launch_browser(driver_path, profile_path)
         time.sleep(15)
-
-        target_name = input("Enter target Full Xpath: ")
-        browser.find_element_by_xpath(target_name).click()  # finding the name of target
-        time.sleep(2)
-        print(style.MAGENTA)
-        confirm = input("Please confirm the target Yes/no: ")
-        print(style.BLUE)
-        message = input("Enter message to send: ")
-        thread = int(input("Enter amount: "))
-
-        if confirm == "Yes":
-            for i in range(thread):
-                print(style.RED)
-                print(f"[+]Messages sent {i}")
-                browser.find_element_by_xpath(
-                    '/html/body/div/div[1]/div[1]/div[4]/div[1]/footer/div[1]/div[2]/div/div[1]/div/div[2]').send_keys(
-                    message)  # send message
-                browser.find_element_by_xpath(
-                    '/html/body/div/div[1]/div[1]/div[4]/div[1]/footer/div[1]/div[2]/div/div[2]/button').click()  # send message
-                time.sleep(3)
-        else:
-            pass
+        interactive_loop(browser)
     except Exception as e:
-        print(e)
-main()
+        print(style.RED + f"Fatal error: {e}" + style.RESET)
+    finally:
+        try:
+            browser.quit()
+        except:
+            pass
+
+
+if __name__ == "__main__":
+    main()
